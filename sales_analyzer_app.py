@@ -3,9 +3,8 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-# ----------------------------------
 # 1. Load Data with Error Handling
-# ----------------------------------
+
 file_path = "burger_sales_analysis.csv"  # Ensure the file is in the same directory
 try:
     df = pd.read_csv(file_path)
@@ -19,9 +18,9 @@ except pd.errors.ParserError:
     st.error("Error: Data file is corrupted.")
     st.stop()
 
-# ----------------------------------
+
 # 2. Verify Required Columns
-# ----------------------------------
+
 required_columns = ['Coca Cola Ordered', 'Pieces Sold', 'Year', 
                     'Selling Price (per piece)', 'Cost of Making (per piece)', 'Burger Name']
 for col in required_columns:
@@ -29,9 +28,9 @@ for col in required_columns:
         st.error(f"Error: Missing required column '{col}' in dataset.")
         st.stop()
 
-# ----------------------------------
+
 # 3. Data Preprocessing
-# ----------------------------------
+
 # Fill missing values for relevant columns
 df[['Coca Cola Ordered', 'Pieces Sold']] = df[['Coca Cola Ordered', 'Pieces Sold']].fillna(0)
 
@@ -43,9 +42,9 @@ if df['Year'].isnull().sum() > 0 or not np.issubdtype(df['Year'].dtype, np.numbe
     st.error("Error: 'Year' column contains missing or non-numeric values.")
     st.stop()
 
-# ----------------------------------
+
 # 4. Train Models for Prediction
-# ----------------------------------
+
 # Sales Prediction Model
 sales_model = LinearRegression()
 X = df[['Year']]
@@ -58,9 +57,9 @@ profit_model = LinearRegression()
 y_profit = df[['Profit']]
 profit_model.fit(X, y_profit)
 
-# ----------------------------------
+
 # 5. Streamlit UI
-# ----------------------------------
+
 st.title("🍔 Product Sales Analyzer")
 
 # User Input: Year
@@ -81,9 +80,9 @@ if st.button("Predict Sales & Profit"):
     st.success(f"📈 Predicted Sales for {year_input}: {int(predicted_sales)} burgers")
     st.success(f"💰 Predicted Profit for {year_input}: ₹{int(predicted_profit)}")
 
-# ----------------------------------
+
 # 6. Display Full Profit Analysis
-# ----------------------------------
+
 st.subheader("📊 Full Profit Analysis")
 st.write(df[['Burger Name', 'Year', 'Profit']])
 
